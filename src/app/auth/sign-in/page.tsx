@@ -1,15 +1,15 @@
-import { getCurrentSession, registerUser, loginUser } from "@/actions/auth";
-import SignUp from "@/components/auth/SignUp";
+import { getCurrentSession, loginUser } from "@/actions/auth";
+import SignIn from "@/components/auth/SignIn";
 import { redirect } from "next/navigation";
 import React from "react";
 import { z } from "zod";
 
-const signUpSchema = z.object({
+const signInSchema = z.object({
     email: z.string().email(),
     password: z.string().min(5),
 });
 
-const SignUpPage = async () => {
+const SignInPage = async () => {
     const { user } = await getCurrentSession();
 
     if (user) {
@@ -18,7 +18,7 @@ const SignUpPage = async () => {
 
     const action = async (prevState: any, formData: FormData) => {
         "use server";
-        const pared = signUpSchema.safeParse(Object.fromEntries(formData));
+        const pared = signInSchema.safeParse(Object.fromEntries(formData));
 
         if (!pared.success) {
             return {
@@ -27,19 +27,18 @@ const SignUpPage = async () => {
         }
 
         const { email, password } = pared.data;
-        const { user, error } = await registerUser(email, password);
+        const { user, error } = await loginUser(email, password);
 
         if (error) {
             return {
                 message: error,
             };
         } else if (user) {
-            await loginUser(email, password);
             return redirect("/");
         }
     };
 
-    return <SignUp action={action} />;
+    return <SignIn action={action} />;
 };
 
-export default SignUpPage;
+export default SignInPage;
