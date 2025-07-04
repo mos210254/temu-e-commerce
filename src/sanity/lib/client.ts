@@ -37,10 +37,17 @@ export const getProductsByCategorySlug = async (slug: string) => {
 
 export const searchProducts = async (searchQuery: string) => {
     const query = `*[_type == "product" && (
-        title match $searchQuery ||
-        description match $searchQuery ||
-        category->slug.current match $searchQuery
+        title match "*" + $searchQuery + "*" ||
+        description match "*" + $searchQuery + "*" ||
+        category->title match "*" + $searchQuery + "*" ||
+        category->slug.current match "*" + $searchQuery + "*"
     )]`;
     const products = await sanityFetch({ query: query, params: { searchQuery } });
     return products.data as Product[];
+};
+
+export const getProductById = async (id: string) => {
+    const query = `*[_type == "product" && _id == $id][0]`;
+    const product = await sanityFetch({ query: query, params: { id } });
+    return product.data as Product;
 };
