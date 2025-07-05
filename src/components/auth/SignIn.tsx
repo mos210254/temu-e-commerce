@@ -50,7 +50,7 @@ const SignIn = ({ action }: SignInProps) => {
                         autoComplete="new-password"
                         required
                         className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
-                        placeholder="Create a password"
+                        placeholder="Enter your password"
                     />
                 </div>
 

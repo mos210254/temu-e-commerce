@@ -6,6 +6,8 @@ import Link from "next/link";
 import { logoutUser } from "@/actions/auth";
 import { useRouter } from "next/navigation";
 import HeaderSearchBar from "./HeaderSearchBar";
+import { useCartStore } from "@/stores/cart-store";
+import { useShallow } from "zustand/shallow";
 
 const AnnouncementBar = () => {
     return (
@@ -28,6 +30,13 @@ const Header = ({ user, categorySelector }: HeaderProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [prevScrollY, setPrevScrollY] = useState<number>(0);
     const router = useRouter();
+
+    const { open, getTotalItems } = useCartStore(
+        useShallow((state) => ({
+            open: state.open,
+            getTotalItems: state.getTotalItems,
+        }))
+    );
 
     useEffect(() => {
         const handleScroll = () => {
@@ -126,7 +135,7 @@ const Header = ({ user, categorySelector }: HeaderProps) => {
                                 </React.Fragment>
                             )}
 
-                            <button className="text-gray-700 hover:text-gray-900 relative">
+                            <button onClick={() => open()} className="text-gray-700 hover:text-gray-900 relative">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-5 w-5 sm:h-6 sm:w-6"
@@ -142,7 +151,7 @@ const Header = ({ user, categorySelector }: HeaderProps) => {
                                     />
                                 </svg>
                                 <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                    0
+                                    {getTotalItems()}
                                 </span>
                             </button>
                         </div>
