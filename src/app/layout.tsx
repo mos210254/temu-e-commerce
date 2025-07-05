@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { getCurrentSession } from "@/actions/auth";
 import { SanityLive } from "@/sanity/lib/live";
 import { Header, HeaderCategorySelector } from "@/components/layout";
+import Cart from "@/components/cart/cart";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ const RootLayout = async ({
             <body className={`${inter.className} antialiased !bg-white min-h-[125vh] text-black`}>
                 <Header user={user} categorySelector={<HeaderCategorySelector />} />
                 {children}
+                <Cart />
                 <SanityLive />
             </body>
         </html>
